@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Film review</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+          integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+          crossorigin="anonymous">
+  </head>
+  <body>
+      <div class="container">
+        <h2>Film review sentiment analysis</h2>
+      </div>
+
+      <div class="container">
+          <form id="target">
+              <div class="form-group">
+                   &nbsp;
+              </div>
+              <div class="form-group">
+                  <label for="review">Tell me about the last film you've seen.</label>
+                  <textarea class="form-control" name="review" id="review" rows="3"> </textarea>
+              </div>
+          </form>
+          <div class="progress" data-toggle="tooltip" data-placement="bottom" title="">
+              <div id="positivebar" class="progress-bar bg-success" role="progressbar" style="width: 50%;"
+                   aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+              <div id="negativebar" class="progress-bar bg-danger" role="progressbar" style="width: 50%;"
+                   aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+      </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+      <script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
+              integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
+              crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
+              integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+              crossorigin="anonymous"></script>
+      <script>
+          $(function () { // enable tooltips, if available
+             $('[data-toggle="tooltip"]').tooltip()
+          }) 
+          function setProgressValue(id, val) {
+              $(id).attr('aria-valuenow', val);
+              $(id).css('width', val + '%')
+              //$(id).text(Math.round(val, 0) + '% positive impression');
+          }
+          function setProgress(val) {
+              setProgressValue('#positivebar', val);
+              setProgressValue('#negativebar', 100-val);
+              $('div.progress').attr('data-original-title', Math.round(val, 0) + '% positive impression')
+          }
+          var request;
+          function updateFromServer() {
+              if (request) { request.abort(); } // cancel already running request
+              var data = $('form#target').serialize()
+              request = $.post( 'analyse', data, function(data) {
+                  var percentage = parseFloat(data) * 100;
+                  if (percentage < 0) {
+                      percentage = 50;
+                  }
+                  setProgress(percentage);
+              });
+          }
+          setProgress(50);
+          var timer;
+          $('form#target textarea').keyup( function(e) {
+             clearTimeout(timer); // only update if user stopped typing
+             timer = setTimeout(updateFromServer, 300); 
+          });
+      </script>
+  </body>
+</html>
