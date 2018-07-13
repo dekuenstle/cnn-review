@@ -4,7 +4,7 @@
 of a neural network model rating the sentiment of arbitrary English sentences as positive or negative.
 
 The task and model is inspired by or even based on [1].
-The model has one convolution layer (learn more about convolution in [4]) with filters of size $\{3, 4, 5\}$, max pooling over the whole sentence and a fully connected layer with sigmoid activation.
+The model has one convolution layer (learn more about convolution in [4]) with filters of size 3, 4 and 5, max pooling over the whole sentence and a fully connected layer with sigmoid activation.
 For training and testing we use sentences of 2000 reviews of the IMDB [2], annotated as positive or negative.
 Sentences are transformed to matrices using pretrained [Word2Vec](https://code.google.com/archive/p/word2vec/) modelss.
 
@@ -108,7 +108,7 @@ $ python3 web_demo.py
 ## Deployment with Docker
 
 The simplest way to deploy and use the web interface is via a Docker container.
-You don't have to prepare any dependencies beside this repositories content and [Docker installed on your computer](https://docs.docker.com/engine/installation/**.
+You don't have to prepare any dependencies beside this repositories content and [Docker installed on your computer](https://docs.docker.com/engine/installation/).
 It should work similar on all major OS.
 
 *Warning: This demo is experimental only. We cannot define it as secure or stable. Use at your own risk*
